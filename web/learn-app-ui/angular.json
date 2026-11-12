@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "learning-app-ui": {
+    "learn-app-ui": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -61,10 +61,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "learning-app-ui:build:production"
+              "buildTarget": "learn-app-ui:build:production"
             },
             "development": {
-              "buildTarget": "learning-app-ui:build:development"
+              "buildTarget": "learn-app-ui:build:development"
             }
           },
           "defaultConfiguration": "development"
