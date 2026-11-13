@@ -9,3 +9,7 @@ GET {{LearnApp.Api_HostAddress}}/api/contacts/2
 GET {{LearnApp.Api_HostAddress}}/api/contacts/999
 ###
 GET {{LearnApp.Api_HostAddress}}/api/di-demo
+###
+GET {{LearnApp.Api_HostAddress}}/api/ef-demo/tracking 
+###
+GET {{LearnApp.Api_HostAddress}}/api/ef-demo/by-city/Springfield

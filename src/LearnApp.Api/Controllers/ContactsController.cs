@@ -1,4 +1,5 @@
-﻿using LearnApp.Api.Models;
+﻿using LearnApp.Api.Dtos;
+using LearnApp.Api.Models;
 using LearnApp.Api.Services;
 using LearnApp.Api.Settings;
 using Microsoft.AspNetCore.Mvc;
@@ -15,17 +16,18 @@ namespace LearnApp.Api.Controllers
 
         // GET api/contacts?take=5
         [HttpGet]
-        public ActionResult<IReadOnlyList<Contact>> GetAll([FromQuery] int? take)
+        public async Task<ActionResult<IReadOnlyList<ContactSummaryDto>>> GetAll([FromQuery] int? take, CancellationToken ct)
         {
-            var pageSize =Math.Clamp(take ?? _settings.DefaultPageSize, 1, _settings.MaxPageSize);
+            var pageSize = Math.Clamp(take ?? _settings.DefaultPageSize, 1, _settings.MaxPageSize);
             if (pageSize > _settings.MaxPageSize)
             {
                 return BadRequest($"The maximum page size is {_settings.MaxPageSize}.");
             }
-            var contactsList = contacts.GetAll(pageSize);
+            var contactsList = await contacts.GetAllAsync(pageSize, ct);
             return Ok(contactsList);
         }
+
         [HttpGet("{id:int}")]
-        public ActionResult<Contact> GetById(int id) => contacts.GetById(id) is { } contact ? Ok(contact) : NotFound();
+        public async Task<ActionResult<ContactDetailDto>> GetById(int id, CancellationToken ct) => await contacts.GetByIdAsync(id, ct) is { } contact ? Ok(contact) : NotFound();
     }
 }
