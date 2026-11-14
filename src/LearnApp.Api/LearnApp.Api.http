@@ -1,15 +1,70 @@
 @LearnApp.Api_HostAddress = http://localhost:5210
 
+### List (paged): 200
 GET {{LearnApp.Api_HostAddress}}/api/contacts
-###
-GET {{LearnApp.Api_HostAddress}}/api/contacts?take=2
-###
-GET {{LearnApp.Api_HostAddress}}/api/contacts/2
-###
+
+### Search, sort, page: 200
+GET {{LearnApp.Api_HostAddress}}/api/contacts?search=a&sortBy=email&sortDir=desc&page=1&pageSize=2
+
+### Invalid page number: 400 with a validation error
+GET {{LearnApp.Api_HostAddress}}/api/contacts?page=0
+
+### Get one: 200
+GET {{LearnApp.Api_HostAddress}}/api/contacts/1
+
+### Get missing: 404
 GET {{LearnApp.Api_HostAddress}}/api/contacts/999
-###
+
+### Create: 201 with a Location header
+POST {{LearnApp.Api_HostAddress}}/api/contacts
+Content-Type: application/json
+
+{
+  "firstName": "Grace",
+  "lastName": "Hopper",
+  "email": "grace.hopper@example.com",
+  "phone": "555-0100"
+}
+
+### Create invalid (missing email, bad phone): 400 with field errors
+POST {{LearnApp.Api_HostAddress}}/api/contacts
+Content-Type: application/json
+
+{
+  "firstName": "No",
+  "lastName": "Email",
+  "phone": "not-a-phone"
+}
+
+### Create duplicate email: 409 from the global handler
+POST {{LearnApp.Api_HostAddress}}/api/contacts
+Content-Type: application/json
+
+{
+  "firstName": "Maria",
+  "lastName": "Again",
+  "email": "maria.lopez@example.com"
+}
+
+### Update: 204
+PUT {{LearnApp.Api_HostAddress}}/api/contacts/1
+Content-Type: application/json
+
+{
+  "firstName": "Maria",
+  "lastName": "Lopez",
+  "email": "maria.lopez@example.com",
+  "phone": "555-0199"
+}
+
+### Delete: 204. Use the id from YOUR "Create" response (6 the first time; it goes up each time you create)
+DELETE {{LearnApp.Api_HostAddress}}/api/contacts/6
+
+### Unexpected error: 500 ProblemDetails, with no secret and no stack trace
+GET {{LearnApp.Api_HostAddress}}/api/error-demo
+
+### Step 1 and 2 demos (still work)
 GET {{LearnApp.Api_HostAddress}}/api/di-demo
-###
-GET {{LearnApp.Api_HostAddress}}/api/ef-demo/tracking 
+
 ###
 GET {{LearnApp.Api_HostAddress}}/api/ef-demo/by-city/Springfield
