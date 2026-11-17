@@ -15,7 +15,7 @@ partial class AppDbContextModelSnapshot : ModelSnapshot
     // If you encounter a merge conflict in the line below, it means you need to
     // discard one of the migration branches and recreate its migrations on top of
     // the other branch. See https://aka.ms/efcore-docs-migrations-conflicts for more info.
-    public override string LastMigrationId => "20261113121516_AddGetCOntactsByCityProc";
+    public override string LastMigrationId => "20261117184132_AddContactPhoneAgain";
 
     protected override void BuildModel(ModelBuilder modelBuilder)
     {
@@ -143,6 +143,10 @@ partial class AppDbContextModelSnapshot : ModelSnapshot
                     .HasMaxLength(100)
                     .HasColumnType("nvarchar(100)");
 
+                b.Property<string>("Phone")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
+
                 b.HasKey("Id");
 
                 b.HasIndex("Email")
@@ -156,35 +160,40 @@ partial class AppDbContextModelSnapshot : ModelSnapshot
                         Id = 1,
                         Email = "maria.lopez@example.com",
                         FirstName = "Maria",
-                        LastName = "Lopez"
+                        LastName = "Lopez",
+                        Phone = ""
                     },
                     new
                     {
                         Id = 2,
                         Email = "james.carter@example.com",
                         FirstName = "James",
-                        LastName = "Carter"
+                        LastName = "Carter",
+                        Phone = ""
                     },
                     new
                     {
                         Id = 3,
                         Email = "aisha.khan@example.com",
                         FirstName = "Aisha",
-                        LastName = "Khan"
+                        LastName = "Khan",
+                        Phone = ""
                     },
                     new
                     {
                         Id = 4,
                         Email = "daniel.kim@example.com",
                         FirstName = "Daniel",
-                        LastName = "Kim"
+                        LastName = "Kim",
+                        Phone = ""
                     },
                     new
                     {
                         Id = 5,
                         Email = "sofia.rossi@example.com",
                         FirstName = "Sofia",
-                        LastName = "Rossi"
+                        LastName = "Rossi",
+                        Phone = ""
                     });
             });
 
