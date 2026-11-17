@@ -1,6 +1,8 @@
-﻿using LearnApp.Api.Dtos;
+﻿using LearnApp.Api.Auth;
+using LearnApp.Api.Dtos;
 using LearnApp.Api.Services;
 using LearnApp.Api.Settings;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -25,7 +27,9 @@ public class ContactsController(IContactService contacts, IOptions<ContactSettin
     public async Task<ActionResult<ContactDetailDto>> GetById(int id, CancellationToken ct) =>
         await contacts.GetByIdAsync(id, ct) is { } contact ? Ok(contact) : NotFound();
 
+
     // POST api/contacts  -> 201 Created, with a Location header pointing at the new contact
+    [Authorize(Policy = Policies.CanEditContacts)]
     [HttpPost]
     public async Task<ActionResult<ContactDetailDto>> Create(ContactRequest request, CancellationToken ct)
     {
@@ -34,11 +38,13 @@ public class ContactsController(IContactService contacts, IOptions<ContactSettin
     }
 
     // PUT api/contacts/2  -> 204 No Content, or 404
+    [Authorize(Policy = Policies.CanEditContacts)]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, ContactRequest request, CancellationToken ct) =>
         await contacts.UpdateAsync(id, request, ct) ? NoContent() : NotFound();
 
     // DELETE api/contacts/2  -> 204 No Content, or 404
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id, CancellationToken ct) =>
         await contacts.DeleteAsync(id, ct) ? NoContent() : NotFound();

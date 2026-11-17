@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LearnApp.Api.Controllers;
 
+[AllowAnonymous]
 [ApiController]
 [Route("api/error-demo")]
 public class ErrorDemoController : ControllerBase

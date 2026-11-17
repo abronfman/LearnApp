@@ -68,3 +68,77 @@ GET {{LearnApp.Api_HostAddress}}/api/di-demo
 
 ###
 GET {{LearnApp.Api_HostAddress}}/api/ef-demo/by-city/Springfield
+
+  ### ================= Step 4: auth =================
+@adminToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJMZWFybkFwcC5VaSIsImlzcyI6IkxlYXJuQXBwLkFwaSIsImV4cCI6MTc5NDk0Mjk5Nywic3ViIjoiMyIsIm5hbWUiOiJWZXJhIFZpZXdlciIsImVtYWlsIjoidmlld2VyQGxlYXJuYXBwLmxvY2FsIiwicm9sZSI6IlZpZXdlciIsImlhdCI6MTc5NDkzOTM5NywibmJmIjoxNzk0OTM5Mzk3fQ.8bBcZ1VTiLcUZiG8B87S8JZZdETAsC9lLQ6ArhJohpU
+
+@caseToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJMZWFybkFwcC5VaSIsImlzcyI6IkxlYXJuQXBwLkFwaSIsImV4cCI6MTc5NDk0MzAzMywic3ViIjoiMiIsIm5hbWUiOiJDYXJsIENhc2UiLCJlbWFpbCI6ImNhc2VAbGVhcm5hcHAubG9jYWwiLCJyb2xlIjoiQ2FzZU1hbmFnZXIiLCJpYXQiOjE3OTQ5Mzk0MzMsIm5iZiI6MTc5NDkzOTQzM30.9ibT_xQk72frN20CbHHqjjIocEyu4pYst-3TFF0sbhE
+
+@viewerToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJMZWFybkFwcC5VaSIsImlzcyI6IkxlYXJuQXBwLkFwaSIsImV4cCI6MTc5NDk0MzA2Mywic3ViIjoiMSIsIm5hbWUiOiJBbmEgQWRtaW4iLCJlbWFpbCI6ImFkbWluQGxlYXJuYXBwLmxvY2FsIiwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzk0OTM5NDYzLCJuYmYiOjE3OTQ5Mzk0NjN9.hze71NYVw9KNcOvnLkfC3mzONIoIguQVkBPMsOEmmqc
+
+### T1. No token: 401
+GET {{LearnApp.Api_HostAddress}}/api/contacts
+
+### T2. Wrong password: 401
+POST {{LearnApp.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{ "email": "viewer@learnapp.local", "password": "wrong" }
+
+### T3a. Log in as Viewer: 200 (copy accessToken into @viewerToken)
+POST {{LearnApp.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{ "email": "viewer@learnapp.local", "password": "Viewer123!" }
+
+### T3b. Log in as CaseManager: 200 (copy into @caseToken)
+POST {{LearnApp.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{ "email": "case@learnapp.local", "password": "Case123!" }
+
+### T3c. Log in as Admin: 200 (copy into @adminToken)
+POST {{LearnApp.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{ "email": "admin@learnapp.local", "password": "Admin123!" }
+
+### T4. Viewer reads: 200
+GET {{LearnApp.Api_HostAddress}}/api/contacts
+Authorization: Bearer {{viewerToken}}
+
+### T5. Who am I: 200 with name, email, and roles ["Viewer"]
+GET {{LearnApp.Api_HostAddress}}/api/auth/me
+Authorization: Bearer {{viewerToken}}
+
+### T6. Viewer creates: 403
+POST {{LearnApp.Api_HostAddress}}/api/contacts
+Authorization: Bearer {{viewerToken}}
+Content-Type: application/json
+
+{ "firstName": "Ada", "lastName": "Lovelace", "email": "ada.lovelace@example.com" }
+
+### T7. CaseManager creates: 201 (rerunning gives 409; change the email)
+POST {{LearnApp.Api_HostAddress}}/api/contacts
+Authorization: Bearer {{caseToken}}
+Content-Type: application/json
+
+{ "firstName": "Ada", "lastName": "Lovelace", "email": "ada.lovelace@example.com" }
+
+### T8. CaseManager deletes: 403
+DELETE {{LearnApp.Api_HostAddress}}/api/contacts/1
+Authorization: Bearer {{caseToken}}
+
+### T9. Admin deletes the contact from T7: 204 (use the id from T7's response)
+DELETE {{LearnApp.Api_HostAddress}}/api/contacts/7
+Authorization: Bearer {{adminToken}}
+
+### T10. Tampered token: 401 (paste a real token, then change ONE character in its middle part)
+GET {{LearnApp.Api_HostAddress}}/api/contacts
+Authorization: Bearer paste-a-token-and-change-one-character
+
+### T11. Still anonymous: 200
+GET {{LearnApp.Api_HostAddress}}/openapi/v1.json
+
+###
+GET {{LearnApp.Api_HostAddress}}/api/di-demo

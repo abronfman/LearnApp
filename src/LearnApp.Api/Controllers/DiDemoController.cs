@@ -1,8 +1,10 @@
 ﻿using LearnApp.Api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LearnApp.Api.Controllers
 {
+    [AllowAnonymous]
     [ApiController]
     [Route("api/di-demo")]
     public class DiDemoController(ITransientProbe transient, IScopedProbe scoped, ISingletonProbe singleton, ProbeReporter reporter) : ControllerBase

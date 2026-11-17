@@ -1,10 +1,12 @@
 ﻿using LearnApp.Api.Data;
 using LearnApp.Api.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LearnApp.Api.Controllers;
 
+[AllowAnonymous]
 [ApiController]
 [Route("api/ef-demo")]
 public class EfDemoController(AppDbContext db) : ControllerBase
