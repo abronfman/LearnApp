@@ -1,0 +1,13 @@
+:host { display: block; font-family: system-ui, sans-serif; }
+
+.app-header {
+  display: flex; align-items: center; gap: 24px;
+  padding: 12px 24px; background: #1f3a5f; color: #fff;
+
+  a { color: #cfe0f5; text-decoration: none; }
+  a.active { color: #fff; font-weight: 600; text-decoration: underline; }
+}
+
+.brand { font-weight: 700; font-size: 1.1em; }
+
+.app-main { padding: 24px; }
